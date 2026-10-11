@@ -7,8 +7,6 @@ from azure.search.documents.indexes.models import (
     VectorSearch,
     HnswAlgorithmConfiguration,
     VectorSearchProfile,
-    SearchVectorSearchAlgorithmKind,
-    SearchVectorSearchAlgorithmMetric,
 )
 
 
