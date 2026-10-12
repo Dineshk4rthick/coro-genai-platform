@@ -93,7 +93,7 @@ def chat(request: ChatRequest):
 
         vector_query = VectorizedQuery(
             vector=query_vector,
-            k_nearest_neighbors=5,
+            k_nearest_neighbors=3,
             fields="embedding",
         )
 
@@ -103,7 +103,7 @@ def chat(request: ChatRequest):
                 search_text=question,
                 vector_queries=[vector_query],
                 select=["source", "content"],
-                top=5,
+                top=3,
             )
         )
 
