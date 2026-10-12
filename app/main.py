@@ -104,6 +104,16 @@ def chat(request: ChatRequest):
                 select=["source", "content"],
                 top=5,
             )
+            logger.info(
+                "Retrieved policy chunks: %s",
+                [
+                    {
+                        "source": item.get("source"),
+                        "content_preview": item.get("content", "")[:200],
+                    }
+                    for item in results
+                ],
+            )
         )
 
         # 4. Handle cases where no policy chunks are retrieved.
