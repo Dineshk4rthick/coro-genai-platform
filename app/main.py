@@ -100,7 +100,7 @@ def chat(request: ChatRequest):
         
         results = list(
             search_client.search(
-                search_text=None,
+                search_text=question,
                 vector_queries=[vector_query],
                 select=["source", "content"],
                 top=5,
