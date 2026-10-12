@@ -1,28 +1,38 @@
 name: Trigger auto deployment for ca-contoso-chatapi-dev
 
-# When this action will be executed
 on:
-  # Automatically trigger it when detected changes in repo
   push:
-    branches: 
-      [ main ]
+    branches: [main]
+    # Only redeploy when something that ships in the image changes.
     paths:
-    - '**'
-    - '.github/workflows/ca-contoso-chatapi-dev-AutoDeployTrigger-7ba8ec39-d882-485f-ba5f-1cb76d240457.yml'
+      - 'app/**'
+      - 'prompts/**'
+      - 'Dockerfile'
+      - '.github/workflows/ca-contoso-chatapi-dev-AutoDeployTrigger-7ba8ec39-d882-485f-ba5f-1cb76d240457.yml'
+  workflow_dispatch:
 
-  # Allow manual trigger 
-  workflow_dispatch:      
+# Never run two deployments at the same time; queue instead.
+concurrency:
+  group: deploy-chatapi-dev
+  cancel-in-progress: false
 
 jobs:
+  # Quality gate 1: unit tests. If they fail, nothing below runs.
+  ci:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
   build-and-deploy:
+    needs: ci
     runs-on: ubuntu-latest
-    permissions: 
-      id-token: write #This is required for requesting the OIDC JWT Token
-      contents: read #Required when GH token is used to authenticate with private repo
+    permissions:
+      id-token: write   # OIDC token for azure/login (no client secret)
+      contents: read
 
     steps:
-      - name: Checkout to the branch
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Azure Login
         uses: azure/login@v2
@@ -31,7 +41,7 @@ jobs:
           tenant-id: ${{ secrets.CACONTOSOCHATAPIDEV_AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.CACONTOSOCHATAPIDEV_AZURE_SUBSCRIPTION_ID }}
 
-      - name: Build and push container image to registry
+      - name: Build and push image, then deploy new revision
         uses: azure/container-apps-deploy-action@v2
         with:
           appSourcePath: ${{ github.workspace }}
@@ -42,5 +52,20 @@ jobs:
           containerAppName: ca-contoso-chatapi-dev
           resourceGroup: rg-contoso-genai-dev
           imageToBuild: crcontosogenai01.azurecr.io/chatapi:${{ github.sha }}
+          # NOTE: on updates this action REPLACES all env vars on the app with
+          # exactly this list. Every variable the app needs must be listed here.
+          # None of these are secrets.
+          environmentVariables: >-
+            FOUNDRY_ENDPOINT=https://ai-contoso-genai-dev-resource.services.ai.azure.com
+            SEARCH_ENDPOINT=https://srch-contoso-genai-dev.search.windows.net
+            GIT_SHA=${{ github.sha }}
+            APP_VERSION=build-${{ github.run_number }}
 
+      # Quality gate 2: prove the live revision is this commit and that the
+      # real stack (Container App -> Foundry -> AI Search) answers correctly.
+      - name: Smoke test the live revision
+        env:
+          APP_URL: https://ca-contoso-chatapi-dev.victoriouswave-49cf689d.centralindia.azurecontainerapps.io
+        run: python3 scripts/smoke_test.py --url "$APP_URL" --sha "${{ github.sha }}"
 
+      # Day 3: eval gate + automatic rollback goes here.
