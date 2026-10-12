@@ -1,5 +1,6 @@
 
 import os
+import logging
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -9,7 +10,7 @@ from azure.search.documents.models import VectorizedQuery
 from openai import OpenAI
 
 app = FastAPI(title="Contoso PolicyAssistant")
-
+logger = logging.getLogger("uvicorn.error")
 credential = DefaultAzureCredential()
 
 FOUNDRY_ENDPOINT = os.getenv(
@@ -124,7 +125,7 @@ def chat(request: ChatRequest):
         }
 
     except Exception:
-        # Avoid returning credentials or internal exception details to clients.
+        logger.exception("Chat request failed")
         raise HTTPException(
             status_code=502,
             detail="The policy assistant could not complete the request.",
