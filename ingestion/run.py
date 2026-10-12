@@ -7,7 +7,7 @@ from azure.search.documents import SearchClient
 from azure.search.documents.indexes import SearchIndexClient
 from openai import OpenAI
 
-from ingestion.chunking import chunk_text
+from ingestion.chunking import chunk_markdown
 from ingestion.index import INDEX_NAME, build_index
 
 
@@ -65,7 +65,7 @@ def main() -> None:
             continue
 
         text = container.download_blob(blob.name).readall().decode("utf-8")
-        chunks = chunk_text(text)
+        chunks = chunk_markdown(text)
 
         for chunk_number, chunk in enumerate(chunks):
             documents.append({
@@ -100,6 +100,15 @@ def main() -> None:
         search_client.upload_documents(documents=batch)
         print(f"Uploaded {min(start + len(batch), len(documents))}"
               f"/{len(documents)} chunks")
+
+    # Remove chunks left over from earlier chunking strategies or deleted files,
+    # so the index always matches the current documents exactly.
+    keep_ids = {doc["id"] for doc in documents}
+    existing = [r["id"] for r in search_client.search(search_text="*", select=["id"])]
+    stale = [{"id": i} for i in existing if i not in keep_ids]
+    if stale:
+        search_client.delete_documents(documents=stale)
+        print(f"Removed {len(stale)} stale chunks")
 
     print(
         f"Finished: indexed {len(documents)} chunks "
