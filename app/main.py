@@ -116,7 +116,7 @@ def chat(request: ChatRequest):
                     "content": f"Question: {question}\n\nPolicy context:\n{context}",
                 },
             ],
-            temperature=0.2,
+            temperature=1,
         )
 
         return {
