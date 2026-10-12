@@ -37,7 +37,7 @@ def main() -> None:
 
     embedding_client = OpenAI(
         base_url=f"{foundry_endpoint.rstrip('/')}/openai/v1/",
-        api_key=token_provider,
+        api_key=token_provider(),
     )
 
     blob_service = BlobServiceClient(
