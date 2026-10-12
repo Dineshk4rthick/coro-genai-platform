@@ -1,4 +1,1 @@
-# Contoso GenAI Platform
-
-DevOps foundation initialized.
-PR validation test.
+This project is about genai devops project
