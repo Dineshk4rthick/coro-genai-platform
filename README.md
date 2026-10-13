@@ -1,1 +1,1 @@
-This project is about genai devops project
+This project is about genai devops project.
