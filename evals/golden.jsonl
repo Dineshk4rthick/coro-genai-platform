@@ -1,0 +1,40 @@
+{"id": "g01", "question": "How many days of annual leave do full-time employees get each year?", "answerable": true, "source": "hr-leave-policy.md", "facts": ["20"]}
+{"id": "g02", "question": "How many sick leave days are full-time employees entitled to per calendar year?", "answerable": true, "source": "hr-leave-policy.md", "facts": ["10|ten"]}
+{"id": "g03", "question": "After how many consecutive sick days do I need a medical certificate?", "answerable": true, "source": "hr-leave-policy.md", "facts": ["two|2"]}
+{"id": "g04", "question": "How many days of emergency leave can I request?", "answerable": true, "source": "hr-leave-policy.md", "facts": ["three|3"]}
+{"id": "g05", "question": "How early should I submit an annual leave request?", "answerable": true, "source": "hr-leave-policy.md", "facts": ["five|5"]}
+{"id": "g06", "question": "How many remote days per week does a standard hybrid arrangement allow?", "answerable": true, "source": "hr-remote-work.md", "facts": ["two|2"]}
+{"id": "g07", "question": "When can I ask for a hybrid work schedule?", "answerable": true, "source": "hr-remote-work.md", "facts": ["90"]}
+{"id": "g08", "question": "What are the core working hours for remote employees?", "answerable": true, "source": "hr-remote-work.md", "facts": ["9:00|9 am|9am|9 a.m.", "3:00|3 pm|3pm|3 p.m."]}
+{"id": "g09", "question": "What Wi-Fi encryption must I use when working from home?", "answerable": true, "source": "hr-remote-work.md", "facts": ["WPA2", "WPA3"]}
+{"id": "g10", "question": "What is the maximum value of a vendor gift I can accept without disclosure?", "answerable": true, "source": "hr-code-of-conduct.md", "facts": ["$50|50"]}
+{"id": "g11", "question": "Who must I tell in writing about outside employment?", "answerable": true, "source": "hr-code-of-conduct.md", "facts": ["Human Resources", "department head"]}
+{"id": "g12", "question": "How can I report misconduct anonymously?", "answerable": true, "source": "hr-code-of-conduct.md", "facts": ["Ethics Hotline"]}
+{"id": "g13", "question": "What is the minimum password length?", "answerable": true, "source": "it-password-mfa.md", "facts": ["14"]}
+{"id": "g14", "question": "How often do passwords expire for standard accounts?", "answerable": true, "source": "it-password-mfa.md", "facts": ["180"]}
+{"id": "g15", "question": "How many failed login attempts lock my account?", "answerable": true, "source": "it-password-mfa.md", "facts": ["five|5"]}
+{"id": "g16", "question": "Which second factors are accepted for multi-factor authentication?", "answerable": true, "source": "it-password-mfa.md", "facts": ["authenticator", "security key|hardware"]}
+{"id": "g17", "question": "How soon must I report a suspected security incident?", "answerable": true, "source": "it-incident-reporting.md", "facts": ["one hour|1 hour|60 minutes"]}
+{"id": "g18", "question": "What should I do with a suspicious phishing email?", "answerable": true, "source": "it-incident-reporting.md", "facts": ["Report Phishing|phishing-report@contoso.local"]}
+{"id": "g19", "question": "What should I do with my computer if I see a ransomware warning?", "answerable": true, "source": "it-incident-reporting.md", "facts": ["disconnect", "power"]}
+{"id": "g20", "question": "Can I use my personal USB flash drive on a company workstation?", "answerable": true, "source": "it-acceptable-use.md", "facts": ["block|not allowed|prohibited|cannot|can't"]}
+{"id": "g21", "question": "Can I upload company documents to an unapproved third-party AI service?", "answerable": true, "source": "it-acceptable-use.md", "facts": ["approval"]}
+{"id": "g22", "question": "How far in advance must domestic business trips be approved?", "answerable": true, "source": "travel-booking.md", "facts": ["14"]}
+{"id": "g23", "question": "How far in advance must international business trips be approved?", "answerable": true, "source": "travel-booking.md", "facts": ["28"]}
+{"id": "g24", "question": "What is the example nightly hotel rate cap in major cities?", "answerable": true, "source": "travel-booking.md", "facts": ["$220|220"]}
+{"id": "g25", "question": "Who has to approve business class flights?", "answerable": true, "source": "travel-booking.md", "facts": ["executive"]}
+{"id": "g26", "question": "What is the daily meal allowance for domestic travel?", "answerable": true, "source": "travel-expenses.md", "facts": ["$75|75"]}
+{"id": "g27", "question": "Within how many days of returning must I submit my expense report?", "answerable": true, "source": "travel-expenses.md", "facts": ["30"]}
+{"id": "g28", "question": "Above what amount is an original itemized receipt mandatory?", "answerable": true, "source": "travel-expenses.md", "facts": ["$25|25"]}
+{"id": "g29", "question": "Are parking tickets reimbursed during business travel?", "answerable": true, "source": "travel-expenses.md", "facts": ["not|employee"]}
+{"id": "g30", "question": "Who approves exceptions to expense reimbursement limits?", "answerable": true, "source": "travel-expenses.md", "facts": ["Head of Finance"]}
+{"id": "g31", "question": "What is the maternity leave policy?", "answerable": false}
+{"id": "g32", "question": "Does Contoso offer sabbatical leave?", "answerable": false}
+{"id": "g33", "question": "Can I bring my dog to the office?", "answerable": false}
+{"id": "g34", "question": "What is the company dress code?", "answerable": false}
+{"id": "g35", "question": "How does the company retirement or pension plan work?", "answerable": false}
+{"id": "g36", "question": "What health insurance coverage do employees receive?", "answerable": false}
+{"id": "g37", "question": "How are annual performance bonuses calculated?", "answerable": false}
+{"id": "g38", "question": "Does Contoso pay relocation expenses for new hires?", "answerable": false}
+{"id": "g39", "question": "What is the policy on stock options for employees?", "answerable": false}
+{"id": "g40", "question": "Is there an on-site gym or fitness reimbursement?", "answerable": false}
