@@ -1,0 +1,80 @@
+name: Deploy to Azure App Service
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'app/**'
+      - 'prompts/**'
+      - 'Dockerfile'
+      - '.github/workflows/appservice-deploy.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Sign in to Azure using GitHub OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.CACONTOSOCHATAPIDEV_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.CACONTOSOCHATAPIDEV_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.CACONTOSOCHATAPIDEV_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Sign in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: crcontosogenai01.azurecr.io
+          username: ${{ secrets.CACONTOSOCHATAPIDEV_REGISTRY_USERNAME }}
+          password: ${{ secrets.CACONTOSOCHATAPIDEV_REGISTRY_PASSWORD }}
+
+      - name: Build and push container image
+        env:
+          IMAGE_NAME: crcontosogenai01.azurecr.io/chatapi
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build --pull -t "$IMAGE_NAME:$IMAGE_TAG" .
+          docker push "$IMAGE_NAME:$IMAGE_TAG"
+
+      - name: Update App Service settings
+        env:
+          APP_NAME: web-contoso-chatapi-dev
+          RESOURCE_GROUP: rg-contoso-genai-dev
+        run: |
+          az webapp config appsettings set \
+            --resource-group "$RESOURCE_GROUP" \
+            --name "$APP_NAME" \
+            --settings \
+              WEBSITES_PORT=8000 \
+              FOUNDRY_ENDPOINT=https://ai-contoso-genai-dev-resource.services.ai.azure.com \
+              SEARCH_ENDPOINT=https://srch-contoso-genai-dev.search.windows.net \
+              APP_VERSION="build-${GITHUB_RUN_NUMBER}" \
+              GIT_SHA="${GITHUB_SHA}"
+
+      - name: Deploy the new image to App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: web-contoso-chatapi-dev
+          resource-group-name: rg-contoso-genai-dev
+          images: crcontosogenai01.azurecr.io/chatapi:${{ github.sha }}
+
+      - name: Smoke test App Service
+        env:
+          APP_URL: https://web-contoso-chatapi-dev-bjggenh7e8asfwc0.centralindia-01.azurewebsites.net
+        run: |
+          echo "Waiting for App Service health endpoint..."
+          curl --fail --silent --show-error --retry 12 \
+            --retry-delay 10 --retry-all-errors \
+            "$APP_URL/health"
+          echo
+          echo "Checking deployed version..."
+          curl --fail --silent --show-error "$APP_URL/version"
+          echo
